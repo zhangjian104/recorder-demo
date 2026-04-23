@@ -1,18 +1,24 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CountdownOverlay } from "./components/launch/CountdownOverlay.tsx";
 import { LaunchWindow } from "./components/launch/LaunchWindow";
 import { SourceSelector } from "./components/launch/SourceSelector";
 import { Toaster } from "./components/ui/sonner";
+import { WebUploadEntry } from "./components/web/WebUploadEntry";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { ShortcutsConfigDialog } from "./components/video-editor/ShortcutsConfigDialog";
 import VideoEditor from "./components/video-editor/VideoEditor";
 import { ShortcutsProvider } from "./contexts/ShortcutsContext";
 import { loadAllCustomFonts } from "./lib/customFonts";
 
+function isElectronRuntime() {
+	return typeof navigator !== "undefined" && /\belectron\b/i.test(navigator.userAgent);
+}
+
 export default function App() {
 	const [windowType, setWindowType] = useState(
 		() => new URLSearchParams(window.location.search).get("windowType") || "",
 	);
+	const isElectron = isElectronRuntime();
 
 	useEffect(() => {
 		const type = new URLSearchParams(window.location.search).get("windowType") || "";
@@ -34,6 +40,13 @@ export default function App() {
 		});
 	}, []);
 
+	const handleWebVideoReady = useCallback(() => {
+		const nextUrl = new URL(window.location.href);
+		nextUrl.searchParams.set("windowType", "editor");
+		window.history.replaceState({}, "", nextUrl.toString());
+		setWindowType("editor");
+	}, []);
+
 	const content = (() => {
 		switch (windowType) {
 			case "hud-overlay":
@@ -50,6 +63,9 @@ export default function App() {
 					</ShortcutsProvider>
 				);
 			default:
+				if (!isElectron) {
+					return <WebUploadEntry onVideoReady={handleWebVideoReady} />;
+				}
 				return (
 					<div className="w-full h-full bg-background text-foreground">
 						<h1>Openscreen</h1>

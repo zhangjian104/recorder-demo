@@ -2,7 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import { I18nProvider } from "./contexts/I18nContext";
+import { installWebElectronApiShim } from "./web/electronApiWebShim";
 import "./index.css";
+
+installWebElectronApiShim();
 
 const windowType = new URLSearchParams(window.location.search).get("windowType") || "";
 if (

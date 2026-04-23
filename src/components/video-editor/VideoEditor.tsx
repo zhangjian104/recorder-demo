@@ -76,6 +76,12 @@ import {
 import VideoPlayback, { VideoPlaybackRef } from "./VideoPlayback";
 import { TRANSITION_WINDOW_MS, ZOOM_IN_TRANSITION_WINDOW_MS } from "./videoPlayback/constants";
 
+const DIRECT_VIDEO_URL_PATTERN = /^(blob:|data:|https?:)/i;
+
+function toPlaybackVideoUrl(sourcePath: string): string {
+	return DIRECT_VIDEO_URL_PATTERN.test(sourcePath) ? sourcePath : toFileUrl(sourcePath);
+}
+
 export default function VideoEditor() {
 	const {
 		state: editorState,
@@ -210,9 +216,9 @@ export default function VideoEditor() {
 
 			setError(null);
 			setVideoSourcePath(sourcePath);
-			setVideoPath(toFileUrl(sourcePath));
+			setVideoPath(toPlaybackVideoUrl(sourcePath));
 			setWebcamVideoSourcePath(webcamSourcePath);
-			setWebcamVideoPath(webcamSourcePath ? toFileUrl(webcamSourcePath) : null);
+			setWebcamVideoPath(webcamSourcePath ? toPlaybackVideoUrl(webcamSourcePath) : null);
 			setCurrentProjectPath(path ?? null);
 
 			pushState({
@@ -354,9 +360,9 @@ export default function VideoEditor() {
 						? fromFileUrl(session.webcamVideoPath)
 						: null;
 					setVideoSourcePath(sourcePath);
-					setVideoPath(toFileUrl(sourcePath));
+					setVideoPath(toPlaybackVideoUrl(sourcePath));
 					setWebcamVideoSourcePath(webcamSourcePath);
-					setWebcamVideoPath(webcamSourcePath ? toFileUrl(webcamSourcePath) : null);
+					setWebcamVideoPath(webcamSourcePath ? toPlaybackVideoUrl(webcamSourcePath) : null);
 					setCurrentProjectPath(null);
 					setLastSavedSnapshot(
 						createProjectSnapshot(
@@ -373,7 +379,7 @@ export default function VideoEditor() {
 				if (result.success && result.path) {
 					const sourcePath = fromFileUrl(result.path);
 					setVideoSourcePath(sourcePath);
-					setVideoPath(toFileUrl(sourcePath));
+					setVideoPath(toPlaybackVideoUrl(sourcePath));
 					setWebcamVideoSourcePath(null);
 					setWebcamVideoPath(null);
 					setCurrentProjectPath(null);
