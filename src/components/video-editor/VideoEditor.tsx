@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { useI18n, useScopedT } from "@/contexts/I18nContext";
 import { useShortcuts } from "@/contexts/ShortcutsContext";
+import { useDemolens } from "@/hooks/useDemolens";
 import { INITIAL_EDITOR_STATE, useEditorHistory } from "@/hooks/useEditorHistory";
 import { useLifecycle } from "@/hooks/useLifecycle";
 import { type Locale } from "@/i18n/config";
@@ -162,6 +163,7 @@ export default function VideoEditor() {
 	const t = useScopedT("editor");
 	const ts = useScopedT("settings");
 	const lifecycle = useLifecycle();
+	useDemolens();
 	const availableLocales = getAvailableLocales();
 	const { locale, setLocale } = useI18n();
 
