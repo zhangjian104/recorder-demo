@@ -14,6 +14,7 @@ import {
 import { useI18n, useScopedT } from "@/contexts/I18nContext";
 import { useShortcuts } from "@/contexts/ShortcutsContext";
 import { INITIAL_EDITOR_STATE, useEditorHistory } from "@/hooks/useEditorHistory";
+import { useLifecycle } from "@/hooks/useLifecycle";
 import { type Locale } from "@/i18n/config";
 import { getAvailableLocales, getLocaleName } from "@/i18n/loader";
 import {
@@ -160,6 +161,7 @@ export default function VideoEditor() {
 	const { shortcuts, isMac } = useShortcuts();
 	const t = useScopedT("editor");
 	const ts = useScopedT("settings");
+	const lifecycle = useLifecycle();
 	const availableLocales = getAvailableLocales();
 	const { locale, setLocale } = useI18n();
 
@@ -339,6 +341,8 @@ export default function VideoEditor() {
 	useEffect(() => {
 		async function loadInitialData() {
 			try {
+				lifecycle.notifyVideoResolveStart();
+
 				const currentProjectResult = await window.electronAPI.loadCurrentProjectFile();
 				if (currentProjectResult.success && currentProjectResult.project) {
 					const restored = await applyLoadedProject(
@@ -346,6 +350,11 @@ export default function VideoEditor() {
 						currentProjectResult.path ?? null,
 					);
 					if (restored) {
+						const media = resolveProjectMedia(currentProjectResult.project);
+						lifecycle.notifyVideoReady({
+							source: "project",
+							hasWebcam: !!media?.webcamVideoPath,
+						});
 						return;
 					}
 				}
@@ -370,6 +379,10 @@ export default function VideoEditor() {
 							INITIAL_EDITOR_STATE,
 						),
 					);
+					lifecycle.notifyVideoReady({
+						source: "session",
+						hasWebcam: !!webcamSourcePath,
+					});
 					return;
 				}
 
@@ -384,20 +397,24 @@ export default function VideoEditor() {
 					setLastSavedSnapshot(
 						createProjectSnapshot({ screenVideoPath: sourcePath }, INITIAL_EDITOR_STATE),
 					);
+					lifecycle.notifyVideoReady({ source: "path", hasWebcam: false });
 				} else {
 					// 无视频也保留主编辑页，不打断用户
 					console.info("Editor opened without a loadable video.");
+					lifecycle.notifyVideoUnavailable({ kind: "none" });
 				}
 			} catch (err) {
 				console.error("Error loading video:", err);
+				lifecycle.notifyVideoUnavailable({ kind: "error", error: err });
 				toast.error(t("errors.initialLoadFailed", { message: String(err) }));
 			} finally {
 				setLoading(false);
+				lifecycle.notifyPageLoadComplete();
 			}
 		}
 
 		loadInitialData();
-	}, [applyLoadedProject, t]);
+	}, [applyLoadedProject, lifecycle, t]);
 
 	// Track whether user preferences have been loaded to avoid
 	// overwriting saved prefs with defaults on the first render
