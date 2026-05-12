@@ -1,5 +1,9 @@
 {
 	"errors": {
+		"unknown": "Error desconocido",
+		"initialLoadFailed": "Error al inicializar: {{message}}",
+		"newRecordingFailed": "No se pudo iniciar una nueva grabación: {{error}}",
+		"playbackFailed": "Error de reproducción de video: {{message}}",
 		"noVideoLoaded": "No hay video cargado",
 		"videoNotReady": "El video no está listo",
 		"unableToDetermineSourcePath": "No se pudo determinar la ruta del video de origen",

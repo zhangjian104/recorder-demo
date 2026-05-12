@@ -6,6 +6,10 @@
 		"confirm": "Confirm"
 	},
 	"errors": {
+		"unknown": "Unknown error",
+		"initialLoadFailed": "Failed to initialize: {{message}}",
+		"newRecordingFailed": "Failed to start new recording: {{error}}",
+		"playbackFailed": "Video playback failed: {{message}}",
 		"noVideoLoaded": "No video loaded",
 		"videoNotReady": "Video not ready",
 		"unableToDetermineSourcePath": "Unable to determine source video path",

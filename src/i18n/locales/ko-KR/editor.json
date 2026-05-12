@@ -6,6 +6,10 @@
 		"confirm": "확인"
 	},
 	"errors": {
+		"unknown": "알 수 없는 오류",
+		"initialLoadFailed": "초기화 실패: {{message}}",
+		"newRecordingFailed": "새 녹화를 시작할 수 없습니다: {{error}}",
+		"playbackFailed": "비디오 재생 실패: {{message}}",
 		"noVideoLoaded": "불러온 비디오가 없습니다",
 		"videoNotReady": "비디오가 준비되지 않았습니다",
 		"unableToDetermineSourcePath": "소스 비디오 경로를 확인할 수 없습니다",

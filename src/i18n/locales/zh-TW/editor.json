@@ -6,6 +6,10 @@
 		"confirm": "確認"
 	},
 	"errors": {
+		"unknown": "未知錯誤",
+		"initialLoadFailed": "初始化失敗：{{message}}",
+		"newRecordingFailed": "無法開始新錄製：{{error}}",
+		"playbackFailed": "影片播放失敗：{{message}}",
 		"noVideoLoaded": "未載入影片",
 		"videoNotReady": "影片未就緒",
 		"unableToDetermineSourcePath": "無法確定來源影片路徑",

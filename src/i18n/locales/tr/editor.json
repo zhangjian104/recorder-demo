@@ -1,5 +1,9 @@
 {
 	"errors": {
+		"unknown": "Bilinmeyen hata",
+		"initialLoadFailed": "Başlatılamadı: {{message}}",
+		"newRecordingFailed": "Yeni kayıt başlatılamadı: {{error}}",
+		"playbackFailed": "Video oynatma hatası: {{message}}",
 		"noVideoLoaded": "Video yüklenmedi",
 		"videoNotReady": "Video hazır değil",
 		"unableToDetermineSourcePath": "Kaynak video yolu belirlenemiyor",
